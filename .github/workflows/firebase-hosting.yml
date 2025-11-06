@@ -1,36 +1,41 @@
-name: 🚀 Deploy to Firebase Hosting
+name: Deploy Flutter Web to Firebase Hosting
 
 on:
   push:
     branches:
-      - main
+      - main  # Ana branch'in ismini farklı kullandıysan burayı değiştir (örneğin master)
 
 jobs:
-  build:
+  build_and_deploy:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v3
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-      - name: Setup Flutter
+      - name: Set up Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.16.0'
+          flutter-version: "3.24.0" # Flutter versiyonuna göre değiştirilebilir
 
-      - name: Install Dependencies
-        run: cd listed && flutter pub get
+      - name: Install dependencies
+        run: flutter pub get
 
-      - name: Build Flutter Web
-        run: cd listed && flutter build web --release
+      - name: Build Flutter web
+        run: flutter build web --release
 
       - name: Copy Firebase Files
-        run: cp listed/firebase.json . && cp listed/.firebaserc .
+        run: |
+          echo "📦 Copying Firebase config files..."
+          if [ -f listed/firebase.json ]; then cp listed/firebase.json ./firebase.json; fi
+          if [ -f listed/.firebaserc ]; then cp listed/.firebaserc ./.firebaserc; fi
+          echo "✅ Files after copy:"
+          ls -a
 
-      - name: Deploy to Firebase
+      - name: Deploy to Firebase Hosting
         uses: w9jds/firebase-action@v13.0.3
         with:
           args: deploy --only hosting
         env:
           FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
-          PROJECT_ID: listed-prod
+          PROJECT_ID: "listed-prod-48501"
