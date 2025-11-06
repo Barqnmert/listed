@@ -1,0 +1,36 @@
+name: 🚀 Deploy to Firebase Hosting
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.16.0'
+
+      - name: Install Dependencies
+        run: cd listed && flutter pub get
+
+      - name: Build Flutter Web
+        run: cd listed && flutter build web --release
+
+      - name: Copy Firebase Files
+        run: cp listed/firebase.json . && cp listed/.firebaserc .
+
+      - name: Deploy to Firebase
+        uses: w9jds/firebase-action@v13.0.3
+        with:
+          args: deploy --only hosting
+        env:
+          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
+          PROJECT_ID: listed-prod
