@@ -3,7 +3,7 @@ name: Deploy Flutter Web to Firebase Hosting
 on:
   push:
     branches:
-      - main  # Ana branch'in ismini farklı kullandıysan burayı değiştir (örneğin master)
+      - main
 
 jobs:
   build_and_deploy:
@@ -16,7 +16,7 @@ jobs:
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: "3.24.0" # Flutter versiyonuna göre değiştirilebilir
+          flutter-version: "3.24.0"
 
       - name: Install dependencies
         run: flutter pub get
@@ -38,4 +38,3 @@ jobs:
           args: deploy --only hosting
         env:
           FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
-          PROJECT_ID: "listed-prod-48501"
