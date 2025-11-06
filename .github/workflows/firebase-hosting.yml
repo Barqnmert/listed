@@ -8,6 +8,9 @@ on:
 jobs:
   build_and_deploy:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: .  # 🔥 repo kök dizini (önemli kısım bu!)
 
     steps:
       - name: 🧱 Checkout repository
@@ -16,7 +19,7 @@ jobs:
       - name: ⚙️ Setup Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: "3.35.7" # Flutter stable sürüm
+          flutter-version: "3.35.7"
 
       - name: 📦 Install dependencies
         run: flutter pub get
@@ -24,13 +27,12 @@ jobs:
       - name: 🏗️ Build Flutter web app
         run: flutter build web --release
 
-      - name: 🔁 Copy Firebase config files
+      - name: 🧩 Verify Firebase files
         run: |
-          echo "📦 Copying Firebase config files..."
-          if [ -f firebase.json ]; then cp firebase.json ./build/web/firebase.json; fi
-          if [ -f .firebaserc ]; then cp .firebaserc ./build/web/.firebaserc; fi
-          echo "✅ Files after copy:"
-          ls -a ./build/web
+          echo "📂 Listing current directory:"
+          ls -a
+          echo "📂 Listing build/web directory:"
+          ls -a build/web
 
       - name: 🚀 Deploy to Firebase Hosting
         uses: w9jds/firebase-action@v13.0.3
@@ -39,4 +41,5 @@ jobs:
         env:
           FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
           PROJECT_ID: listed-prod-48501
+
 
