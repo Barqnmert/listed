@@ -1,5 +1,6 @@
 {
   "hosting": {
+    "site": "listed-staging",
     "public": "build/web",
     "ignore": [
       "firebase.json",
