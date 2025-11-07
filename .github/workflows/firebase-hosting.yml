@@ -46,6 +46,6 @@ jobs:
           args: deploy --only hosting
         env:
           FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
-          PROJECT_ID: listed-prod-48501
+          PROJECT_ID: listed-staging
 
 
