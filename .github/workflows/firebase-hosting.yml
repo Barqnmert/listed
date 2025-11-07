@@ -26,7 +26,6 @@ jobs:
         run: |
           echo "📦 Copying Firebase config files..."
           if [ -f listed/firebase.json ]; then cp listed/firebase.json ./firebase.json; fi
-          if [ -f listed/.firebaserc ]; then cp listed/.firebaserc ./.firebaserc; fi
           echo "✅ Files after copy:"
           ls -a
 
@@ -34,11 +33,12 @@ jobs:
         run: |
           if [ "${{ github.ref_name }}" == "main" ]; then
             echo "🔥 Deploying to PRODUCTION"
-            echo "{ \"projects\": { \"default\": \"listed-prod\" } }" > .firebaserc
+            echo '{ "projects": { "default": "listed-prod-48501" } }' > .firebaserc
           else
             echo "🧪 Deploying to STAGING"
-            echo "{ \"projects\": { \"default\": \"listed-staging\" } }" > .firebaserc
+            echo '{ "projects": { "default": "listed-staging" } }' > .firebaserc
           fi
+          cat .firebaserc
 
       - name: Deploy to Firebase Hosting
         uses: w9jds/firebase-action@v13.0.3
@@ -46,6 +46,6 @@ jobs:
           args: deploy --only hosting
         env:
           FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
-          PROJECT_ID: listed-prod-48501
+
 
 
